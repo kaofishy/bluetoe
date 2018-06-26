@@ -10,11 +10,15 @@
 
 #pragma pack(1)
 
+#define _F F
 #undef F
 #include "bluetoe/server.hpp"
 //#include "bluetoe/services/dis.hpp"
 #include "hcidefs.h"
 #include "hcimsgs.h"
+#include "esp_bt.h"
+#include "nvs_flash.h"
+#define F _F
 
 
 
@@ -54,6 +58,40 @@ struct {
 	uint8_t len = 1;
 	uint8_t en = 1;
 } hci_ble_write_adv_enable_cmd;
+
+struct {
+	uint8_t packet_type = HCIT_TYPE_COMMAND;
+	uint16_t opcode = HCI_BLE_READ_BUFFER_SIZE;
+	uint8_t len = 0;
+} hci_ble_read_buffer_size_cmd;
+
+struct {
+	uint8_t packet_type = HCIT_TYPE_COMMAND;
+	uint16_t opcode = HCI_BLE_READ_DEFAULT_DATA_LENGTH;
+	uint8_t len = 0;
+} hci_ble_read_default_data_length_cmd;
+
+struct {
+	uint8_t packet_type = HCIT_TYPE_COMMAND;
+	uint16_t opcode = HCI_BLE_WRITE_DEFAULT_DATA_LENGTH;
+	uint8_t len = 4;
+	uint16_t tx_size = 0x00fb;
+	uint16_t tx_time = 0x0148;
+} hci_ble_write_default_data_length;
+
+struct {
+	uint8_t packet_type = HCIT_TYPE_COMMAND;
+	uint16_t opcode = HCI_BLE_SET_EVENT_MASK;
+	uint8_t len = 8;
+	uint64_t mask = 0x7ff;
+} hci_ble_set_event_mask_cmd;
+
+struct {
+	uint8_t packet_type = HCIT_TYPE_COMMAND;
+	uint16_t opcode = HCI_SET_EVENT_MASK;
+	uint8_t len = 8;
+	uint64_t mask = 0x20001fffffffffff;
+} hci_set_event_mask_cmd;
 
 struct DataPacketHeader {
 	uint8_t packet_type = HCIT_TYPE_ACL_DATA;
